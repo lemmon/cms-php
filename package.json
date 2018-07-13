@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "choo": "^6.12.1"
+  },
+  "scripts": {
+    "w:app": "watchify src/frontend -o develop/admin.js --verbose",
+    "w": "npm run w:app"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2017
+    }
+  }
+}

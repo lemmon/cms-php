@@ -1,0 +1,9 @@
+#!/bin/sh
+cd "$(dirname $0)/.."
+BASE_DIR=`pwd`
+
+rm -rf develop/*
+
+mkdir -pv develop
+ln -snv ../src/backend/index.php develop/admin.php
+ln -snv ../config/index.php develop/admin.config.php

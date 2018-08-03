@@ -1,6 +1,8 @@
 {
   "devDependencies": {
-    "choo": "^6.12.1"
+    "nanocomponent": "^6.5.2",
+    "nanohtml": "^1.2.4",
+    "nanomorph": "^5.1.3"
   },
   "scripts": {
     "w:app": "watchify src/frontend -o develop/admin.js --verbose",

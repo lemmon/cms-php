@@ -37,4 +37,6 @@ fetch(router.to('/schema.json'), {
 )).then(res => {
   state.schema = res.schema
   render()
+}).catch(e => {
+  console.error(e)
 })

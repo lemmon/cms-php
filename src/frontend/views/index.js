@@ -31,7 +31,7 @@ module.exports = (state, render) => router([
     }
     const { current } = state
     return html`
-      <body class="p1 row">
+      <body class="row">
         ${sidebar({
           section,
           current,

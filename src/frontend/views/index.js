@@ -38,8 +38,8 @@ module.exports = (state, render) => router([
         }, state)}
         ${
           current && router([
-            [MATCH_SECTION, () => views.collection.index({ current }, state)],
-            [MATCH_ACTION, (_, _section, action) => views.collection.update({ current }, state)],
+            [MATCH_SECTION, () => views.collection.index({ current }, state, render)],
+            [MATCH_ACTION, (_, _section, action) => views.collection.update({ current }, state, render)],
           ]) || section && views.notfound(state)
             || views.dashboard(state)
         }

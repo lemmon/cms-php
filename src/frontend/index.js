@@ -25,6 +25,14 @@ function render() {
   morph(document.body, page(state, render))
 }
 
+// components
+const ComponentContainer = require('./lib/components-container.js')
+const container = new ComponentContainer()
+
+render.component = (Component, props, instanceId) => (
+  container.render(Component, props, instanceId)
+)
+
 // load schema
 fetch(router.to('/schema.json'), {
   method: 'GET',

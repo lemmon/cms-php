@@ -1,12 +1,11 @@
-const morph = require('nanomorph')
 const router = require('./lib/router')
+const state = require('./state')
+const render = require('./render')
 const page = require('./views')
 
-// state
-const HISTORY_OBJECT = {}
-const state = {}
-
 // navigation
+const HISTORY_OBJECT = {}
+
 window.addEventListener('click', (e) => {
   const target = e.target.closest('a[href]')
   if (target) {
@@ -20,20 +19,7 @@ window.onpopstate = () => {
   render()
 }
 
-// render emitter
-function render() {
-  morph(document.body, page(state, render))
-}
-
-// components
-const ComponentContainer = require('./lib/components-container.js')
-const container = new ComponentContainer()
-
-render.component = (Component, props, instanceId) => (
-  container.render(Component, props, instanceId)
-)
-
-// load schema
+// load schema and run
 fetch(router.to('/schema.json'), {
   method: 'GET',
   headers: {
@@ -43,6 +29,7 @@ fetch(router.to('/schema.json'), {
 }).then(res => (
   res.json()
 )).then(res => {
+  state.page = page
   state.schema = res.schema
   render()
 }).catch(e => {

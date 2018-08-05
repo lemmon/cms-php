@@ -1,7 +1,7 @@
 const html = require('nanohtml')
 const router = require('../../lib/router')
 
-module.exports = ({ current, section }, { schema }) => html`
+module.exports = ({ schema, current, section }) => html`
   <aside class="span1 max16 p1">
     <div class="p05">
       <div class="p05">

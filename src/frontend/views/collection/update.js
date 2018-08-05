@@ -1,9 +1,10 @@
 const html = require('nanohtml')
 const router = require('../../lib/router')
+const render = require('../../render')
 
 const Form = require('../components/form')
 
-module.exports = ({ current }, state, render) => html`
+module.exports = ({ current }) => html`
   <section class="span1">
     <div class="p05">
       <header class="p05 row items-center">
@@ -13,17 +14,20 @@ module.exports = ({ current }, state, render) => html`
       </header>
       ${render.component(Form, {
         current,
-        onsubmit: e => handleSubmit(e, { current }, state, render),
+        onsubmit: e => handleSubmit(e, { current }),
       }, `${current.id}__update`)}
     </div>
   </section>
 `
 
-function handleSubmit(e, { current }, state, render) {
+function handleSubmit(e, { current }) {
   e.preventDefault()
   const form = e.target
-  console.log(current)
+  const data = {}
   for (const field of form) {
-    console.log(field.name, field.value)
+    if (field.name && field.value) {
+      data[field.name] = field.value
+    }
   }
+  console.log(data)
 }

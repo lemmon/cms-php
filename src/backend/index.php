@@ -5,6 +5,7 @@ namespace app;
 require __DIR__ . '/lib/config.php';
 require __DIR__ . '/lib/debug.php';
 require __DIR__ . '/lib/http.php';
+require __DIR__ . '/lib/id.php';
 require __DIR__ . '/lib/json.php';
 require __DIR__ . '/lib/router.php';
 

@@ -8,8 +8,8 @@ function router($routes, $default)
   foreach ($routes as $route) {
     if (
       $route[0] === HTTP['method']
-      and preg_match('#' . path_to_regex($route[1]) . '#', HTTP['path'])
-      and $route[2]() !== FALSE
+      and preg_match('#^' . path_to_regex($route[1]) . '$#', HTTP['path'], $matches)
+      and $route[2]($matches) !== FALSE
     ) {
       return TRUE;
     }
@@ -20,10 +20,14 @@ function router($routes, $default)
 
 function path_to_regex($path)
 {
-  return strtr($path, [
+  $path = preg_replace_callback('#:(\w+)#', function ($m) {
+    return "(?P<${m[1]}>[\w\-]+)";
+  }, $path);
+  $path = strtr($path, [
     '**/' => '(.*/)?',
     '**'  => '.*',
     '*'   => '[^/]+',
     '.'   => '\.',
   ]);
+  return $path;
 }

@@ -8,6 +8,7 @@ require __DIR__ . '/lib/http.php';
 require __DIR__ . '/lib/id.php';
 require __DIR__ . '/lib/json.php';
 require __DIR__ . '/lib/router.php';
+require __DIR__ . '/lib/store.php';
 
 router([
   // schema
@@ -16,9 +17,35 @@ router([
       'schema' => parse_schema(config()['schema']),
     ]);
   }],
-  // collection
-  ['GET', '/*.json', function () {
-    json([]);
+  // read collection
+  ['GET', '/:name.json', function ($m) {
+    json(store\read_many($m['name']));
+  }],
+  // read entry
+  ['GET', '/:name/:id.json', function ($m) {
+    json(store\read($m['name'], $m['id']));
+  }],
+  // create entry
+  ['POST', '/:name', function ($m) {
+    $data = json_decode(file_get_contents('php://input'), TRUE);
+    json([
+      'success' => TRUE,
+      'data' => store\create($m['name'], $data),
+    ]);
+  }],
+  // update entry
+  ['POST', '/:name/:id', function ($m) {
+    $data = json_decode(file_get_contents('php://input'), TRUE);
+    json([
+      'success' => TRUE,
+      'data' => store\update($m['name'], $m['id'], $data),
+    ]);
+  }],
+  // delete entry
+  ['DELETE', '/:name/:id', function ($m) {
+    json([
+      'success' => store\delete($m['name'], $m['id']),
+    ]);
   }],
   // app
   ['GET', '/**', function () {
@@ -28,5 +55,5 @@ router([
   }],
 ], function () {
   // error
-  error(400);
+  error(405);
 });

@@ -7,6 +7,9 @@ const page = require('./views')
 const HISTORY_OBJECT = {}
 
 window.addEventListener('click', (e) => {
+  if (e.defaultPrevented) {
+    return
+  }
   const target = e.target.closest('a[href]')
   if (target) {
     e.preventDefault();

@@ -10,8 +10,4 @@ function router(routes) {
   }
 }
 
-router.to = function(href) {
-  return window.root + href
-}
-
 module.exports = router

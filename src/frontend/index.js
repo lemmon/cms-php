@@ -22,8 +22,17 @@ window.onpopstate = () => {
   render()
 }
 
+window.linkTo = (href) => {
+  return window.root + href
+}
+
+window.redir = (href) => {
+  history.pushState(HISTORY_OBJECT, null, window.root + href)
+  render()
+}
+
 // load schema and run
-fetch(router.to('/schema.json'), {
+fetch(linkTo('/schema.json'), {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',

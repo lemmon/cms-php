@@ -7,13 +7,13 @@ const nothing = () => html`
   <div>n/a</div>
 `
 
-const table = ({ current, data }) => {
-  const mainField = current.fields[0]
+const table = ({ collection, data }) => {
+  const mainField = collection.fields[0]
   return data.length && html`
     <div class="bt b-black-10 lh4">${data.map(item => html`
       <div class="p1 bb b-black-10"><a
         class="a-ul"
-        href="/${current.id}/${item.id}"
+        href="/${collection.id}/${item.id}"
       >${
         item[mainField.name] || html`<span class="color-black-50">n/a</span>`
       }</a></div>
@@ -25,9 +25,8 @@ module.exports = class Table extends Component {
 
   constructor(props) {
     super()
-    const { current } = props
-    const url = `${window.root}/${current.id}.json`
-    fetch(url, {
+    const { collection } = props
+    fetch(linkTo(`/${collection.id}.json`), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -42,9 +41,9 @@ module.exports = class Table extends Component {
     })
   }
 
-  createElement({ current }) {
+  createElement({ collection }) {
     return this.data ? table({
-      current,
+      collection,
       data: this.data,
     }) : loader()
   }

@@ -14,7 +14,8 @@ const sidebar = require('./partials/sidebar')
 const MATCH_ANY = RegExp('^/([^/]+)?')
 const MATCH_HOME = RegExp('^/$')
 const MATCH_SECTION = RegExp('^/([^/]+)$')
-const MATCH_ACTION = RegExp('^/([^/]+)/([^/]+)$')
+const MATCH_ACTION = RegExp('^/([^/]+)/([a-z]{1,9})$')
+const MATCH_ENTRY = RegExp('^/([^/]+)/([a-f0-9]{10})$')
 
 const renderDashboard = ({ schema }) => [
   sidebar({
@@ -23,15 +24,16 @@ const renderDashboard = ({ schema }) => [
   views.dashboard(),
 ]
 
-const renderSection = ({ schema, current, section }) => [
+const renderSection = ({ schema, collection, section }) => [
   sidebar({
     schema,
-    current,
+    collection,
     section,
   }),
   router([
-    [MATCH_SECTION, () => views.collection.index({ current })],
-    [MATCH_ACTION, (_, _section, action) => views.collection.update({ current })],
+    [MATCH_SECTION, () => views.collection.index({ collection })],
+    [MATCH_ACTION, ([_, _section, action]) => views.collection.update({ collection, action })],
+    [MATCH_ENTRY, ([_, _section, id]) => views.collection.update({ collection, id, action: 'update' })],
   ])
 ]
 
@@ -41,26 +43,26 @@ module.exports = () => html`
       [MATCH_HOME, () => renderSection({
         schema: state.schema,
       })],
-      [MATCH_ANY, ([_, section]) => findCurrent(section) && renderSection({
+      [MATCH_ANY, ([_, section]) => findcollection(section) && renderSection({
         schema: state.schema,
-        current: state.current,
+        collection: state.collection,
         section,
       }) || views.notfound()],
     ])}
   </body>
 `
 
-function findCurrent(section) {
+function findcollection(section) {
   const {
     schema,
-    current,
+    collection,
   } = state
-  if (current && current.id === section) {
-    return current
+  if (collection && collection.id === section) {
+    return collection
   }
   for (const item of schema.collections) {
     if (item.id === section) {
-      return state.current = item
+      return state.collection = item
     }
   }
 }

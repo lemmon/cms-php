@@ -71,7 +71,7 @@ function get_dir(string $collection): string
     , $collection
   );
   // create directory
-  if (!is_dir(ROOT) and !mkdir(ROOT, 0777, TRUE)) {
+  if (!is_dir($dir) and !mkdir($dir, 0777, TRUE)) {
     throw new \Exception('Could not create collection directory');
   }
   //

@@ -21,7 +21,7 @@ ini_set('display_errors', 0);
 //error_reporting(0);
 
 set_error_handler(function ($errno, $errstr) {
-  die('_ERROR');
+  error(500, $errstr);
 }, E_ALL);
 
 set_exception_handler(function (\Throwable $e) {

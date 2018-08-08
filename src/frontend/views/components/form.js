@@ -7,6 +7,12 @@ const loader = require('../partials/loader')
 const Input = require('./input')
 const button = require('../partials/button')
 
+const actions = {
+  create: 'handleCreate',
+  update: 'handleUpdate',
+  delete: 'handleDelete',
+}
+
 module.exports = class Form extends Component {
 
   constructor(props) {
@@ -14,6 +20,7 @@ module.exports = class Form extends Component {
     const { id } = props
     this._components = new Container()
     this._action = props.action
+    this._currentAction = null
     this._data = !props.id && {} || null
     this._id = props.id
     this._loading = false
@@ -56,7 +63,19 @@ module.exports = class Form extends Component {
                   caption: 'Submit Form',
                   bgColor: 'blue',
                   disabled: this._loading,
-                  loading: this._loading,
+                  loading: this._loading && !this._currentAction,
+                })}
+              </div>
+              <div class="p1">
+                ${button({
+                  type: 'submit',
+                  caption: '\u2327',
+                  bgColor: 'red',
+                  disabled: this._loading,
+                  loading: this._loading && this._currentAction === 'delete',
+                  onclick: e => {
+                    this._currentAction = 'delete'
+                  },
                 })}
               </div>
             </div>
@@ -79,16 +98,32 @@ module.exports = class Form extends Component {
   handleSubmit(e, props) {
     e.preventDefault()
     document.activeElement.blur()
-    //const form = e.target
-    const target = `/${props.collection.id}${props.id && `/${props.id}` || ``}`
     this._loading = true
     this.render(props, true)
-    api.post(target, Object.assign({}, this._data, {
+    const action = this._currentAction || this._action
+    this[actions[action]](props).then(res => {
+      redir(`/${props.collection.id}`)
+    }).catch(err => {
+      console.error(err)
+      this._loading = false
+      this._currentAction = null
+      this.render(props)
+    })
+  }
+
+  handleCreate(props) {
+    return api.post(`/${props.collection.id}`, this._data)
+  }
+
+  handleUpdate(props) {
+    return api.post(`/${props.collection.id}/${props.id}`, Object.assign({}, this._data, {
       id: undefined,
       created: undefined,
       updated: undefined,
-    })).then(res => {
-      redir(`/${props.collection.id}`)
-    })
+    }))
+  }
+
+  handleDelete(props) {
+    return api.delete(`/${props.collection.id}/${props.id}`, this._data)
   }
 }

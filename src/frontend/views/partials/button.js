@@ -14,5 +14,6 @@ module.exports = (props) => html`
     value=${props.value  || ''}
     ${props.disabled || props.loading ? `disabled` : ``}
     ${props.loading ? `data-loading` : ``}
+    onclick=${props.onclick}
   >${props.caption}</button>
 `

@@ -78,6 +78,7 @@ module.exports = class Form extends Component {
 
   handleSubmit(e, props) {
     e.preventDefault()
+    document.activeElement.blur()
     //const form = e.target
     const target = `/${props.collection.id}${props.id && `/${props.id}` || ``}`
     this._loading = true

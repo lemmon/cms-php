@@ -1,4 +1,5 @@
 const router = require('./lib/router')
+const api = require('./api')
 const state = require('./state')
 const render = require('./render')
 const page = require('./views')
@@ -32,15 +33,7 @@ window.redir = (href) => {
 }
 
 // load schema and run
-fetch(linkTo('/schema.json'), {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
-}).then(res => (
-  res.json()
-)).then(res => {
+api.get('/schema.json').then(res => {
   state.page = page
   state.schema = res.schema
   render()

@@ -1,5 +1,6 @@
 const html = require('nanohtml')
 const Component = require('nanocomponent')
+const api = require('../../api')
 
 const loader = require('../partials/loader')
 
@@ -26,16 +27,7 @@ module.exports = class Table extends Component {
   constructor(props) {
     super()
     const { collection } = props
-    fetch(linkTo(`/${collection.id}.json`), {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      credentials: 'include',
-    }).then(res => (
-      res.json()
-    )).then(res => {
+    api.get(`/${collection.id}.json`).then(res => {
       this.data = res
       this.render(props)
     })

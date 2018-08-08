@@ -1,6 +1,7 @@
 const html = require('nanohtml')
 const Component = require('nanocomponent')
 const Container = require('../../lib/components-container')
+const api = require('../../api')
 
 const loader = require('../partials/loader')
 const Input = require('./input')
@@ -17,16 +18,7 @@ module.exports = class Form extends Component {
     this._id = props.id
     this._loading = false
     if (props.id) {
-      fetch(linkTo(`/${props.collection.id}/${props.id}.json`), {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        credentials: 'include',
-      }).then(res => (
-        res.json()
-      )).then(res => {
+      api.get(`/${props.collection.id}/${props.id}.json`).then(res => {
         this._data = res
         this.render(props)
       })
@@ -86,34 +78,16 @@ module.exports = class Form extends Component {
 
   handleSubmit(e, props) {
     e.preventDefault()
-    const form = e.target
-    const data = new FormData(form)
+    //const form = e.target
+    const target = `/${props.collection.id}${props.id && `/${props.id}` || ``}`
     this._loading = true
     this.render(props, true)
-    fetch(linkTo(`/${props.collection.id}${props.id && `/${props.id}` || ``}`), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(Object.assign({}, this._data, {
-        id: undefined,
-        //action: undefined,
-        created: undefined,
-        updated: undefined,
-      })),
-      credentials: 'include',
-    }).then(res => (
-      res.json()
-    )).then(res => {
-      if (res.error) {
-        throw Error(res.message || `Unknown error`)
-      }
+    api.post(target, Object.assign({}, this._data, {
+      id: undefined,
+      created: undefined,
+      updated: undefined,
+    })).then(res => {
       redir(`/${props.collection.id}`)
-    }).catch(err => {
-      console.error(err)
-      this._loading = false
-      this.render(props)
     })
   }
 }

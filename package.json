@@ -5,8 +5,9 @@
     "nanomorph": "^5.1.3"
   },
   "scripts": {
+    "w:css": "abrusco src/css -o develop/admin.css --watch",
     "w:app": "watchify src/frontend -o develop/admin.js --verbose",
-    "w": "npm run w:app"
+    "w": "npm run w:css & npm run w:app"
   },
   "eslintConfig": {
     "parserOptions": {

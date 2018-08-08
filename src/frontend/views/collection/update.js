@@ -12,11 +12,13 @@ module.exports = ({ collection, action, id }) => html`
         <div class="p1 div color-black-20 self-stretch"></div>
         <div class="p1 lh5"><a class="color-black-50 a-ul a-color-inherit" href="/${collection.id}">back</a></div>
       </header>
-      ${render.component(Form, {
-        collection,
-        action,
-        id,
-      }, `${collection.id}__${action}`)}
+      <div class="max48">
+        ${render.component(Form, {
+          collection,
+          action,
+          id,
+        }, `${collection.id}__${action}`)}
+      </div>
     </div>
   </section>
 `

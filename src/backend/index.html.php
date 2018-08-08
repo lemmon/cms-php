@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>CMS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="<?= $root ?>/admin.css">
   <link rel="stylesheet" href="/abrusco/css/abrusco.min.css">
   <script>
   window.root = '<?= $self ?>';

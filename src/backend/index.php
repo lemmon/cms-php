@@ -51,7 +51,7 @@ router([
   ['GET', '/**', function () {
     $root = dirname($_SERVER['SCRIPT_NAME']);
     $self = rtrim($_SERVER['SCRIPT_NAME'], '/');
-    include __DIR__ . '/index.html';
+    include __DIR__ . '/index.html.php';
   }],
 ], function () {
   // error

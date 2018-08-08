@@ -40,7 +40,7 @@ const renderSection = ({ schema, collection, section }) => [
 module.exports = () => html`
   <body class="row">
     ${router([
-      [MATCH_HOME, () => renderSection({
+      [MATCH_HOME, () => renderDashboard({
         schema: state.schema,
       })],
       [MATCH_ANY, ([_, section]) => findcollection(section) && renderSection({

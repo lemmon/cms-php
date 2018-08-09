@@ -11,8 +11,8 @@ const nothing = () => html`
 const table = ({ collection, data }) => {
   const mainField = collection.fields[0]
   return data.length && html`
-    <div class="bt b-black-10 lh4">${data.map(item => html`
-      <div class="p1 bb b-black-10"><a
+    <div class="field-bt b-black-10 lh4">${data.map(item => html`
+      <div class="p1 field-bb b-black-10"><a
         class="a-ul"
         href="/${collection.id}/${item.id}"
       >${

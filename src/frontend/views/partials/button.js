@@ -5,8 +5,9 @@ module.exports = (props) => html`
   <button
     class="
       button button-over
-      bg-${props.bgColor || 'blue'}
-      color-white
+      ${props.style && `button-${props.style}` || ``}
+      bg-${props.color || `blue`}
+      color-${props.style ? props.color || `blue` : `white`}
       p1 lh4
     "
     type=${props.type || 'button'}
@@ -15,5 +16,9 @@ module.exports = (props) => html`
     ${props.disabled || props.loading ? `disabled` : ``}
     ${props.loading ? `data-loading` : ``}
     onclick=${props.onclick}
-  >${props.caption}</button>
+  ><span
+    class="
+      button-caption
+      color-${props.style ? `white` : `inherit`}
+    ">${props.caption}</span></button>
 `

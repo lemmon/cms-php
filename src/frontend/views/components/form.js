@@ -61,7 +61,7 @@ module.exports = class Form extends Component {
                 ${button({
                   type: 'submit',
                   caption: 'Submit Form',
-                  bgColor: 'blue',
+                  color: 'blue',
                   disabled: this._loading,
                   loading: this._loading && !this._currentAction,
                 })}
@@ -70,7 +70,8 @@ module.exports = class Form extends Component {
                 ${button({
                   type: 'submit',
                   caption: '\u2327',
-                  bgColor: 'red',
+                  style: 'clear',
+                  color: 'red',
                   disabled: this._loading,
                   loading: this._loading && this._currentAction === 'delete',
                   onclick: e => {

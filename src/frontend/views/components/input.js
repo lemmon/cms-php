@@ -10,28 +10,15 @@ module.exports = class Input extends Component {
 
   createElement(props) {
     return html`
-      <label class="block" style="position: relative;">
+      <label class="field">
         <div
-          class="f2 fw500 color-black-40 bg-white"
-          style="
-            line-height: 1rem;
-            position: absolute;
-            left: .5rem;
-            top: -.5rem;
-            padding: 0 .5rem;
-          "
+          class="field-label f2 fw500 color-black-40 bg-white"
         >${props.name}</div>
         <input
-          type="text"
+          type=${props.type || `text`}
           name=${props.name}
           value=${props.value !== undefined ? props.value || `` : this.value}
-          class="p1 lh4 ba b-black-10 bg-white"
-          style="
-            display: block;
-            width: 100%;
-            font-family: inherit;
-            font-size: inherit;
-          "
+          class="field-input field-border p1 lh4 bg-white"
           oninput=${e => this.handleInput(e, props)}
           change=${e => this.handleChange(e, props)}
           onfocus=${e => this.handleFocus(e, props)}

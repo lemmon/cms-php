@@ -66,19 +66,21 @@ module.exports = class Form extends Component {
                   loading: this._loading && !this._currentAction,
                 })}
               </div>
-              <div class="p1">
-                ${button({
-                  type: 'submit',
-                  caption: '\u2327',
-                  style: 'clear',
-                  color: 'red',
-                  disabled: this._loading,
-                  loading: this._loading && this._currentAction === 'delete',
-                  onclick: e => {
-                    this._currentAction = 'delete'
-                  },
-                })}
-              </div>
+              ${id && html`
+                <div class="p1">
+                  ${button({
+                    type: 'submit',
+                    caption: '\u2327',
+                    style: 'clear',
+                    color: 'red',
+                    disabled: this._loading,
+                    loading: this._loading && this._currentAction === 'delete',
+                    onclick: e => {
+                      this._currentAction = 'delete'
+                    },
+                  })}
+                </div>
+              ` || ``}
             </div>
           </div>
         </form>

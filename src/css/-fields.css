@@ -49,6 +49,7 @@
     bottom: 0;
     height: 100%;
   }
+  & .field-input,
   & .field-preview {
     white-space: pre-wrap;
     word-break: break-all;

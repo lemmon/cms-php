@@ -22,7 +22,12 @@ module.exports = class Input extends Component {
             onchange=${e => this.handleChange(e, props)}
             onfocus=${e => this.handleFocus(e, props)}
             onblur=${e => this.handleBlur(e, props)}
-            >${this.value || ``}</textarea>
+            onkeypress=${e => {
+              if (e.keyCode === 13 && !props.multiline) {
+                e.preventDefault()
+              }
+            }}
+          >${this.value || ``}</textarea>
           <div class="p1 lh4 row">
             ${props.multiline && html`<div style="width: 0;">1<br>2<br>3<br></div>` || ``}
             <div class="span1 field-preview"></div>
@@ -70,6 +75,9 @@ module.exports = class Input extends Component {
 
   handleBlur(e, props) {
     this.value = e.target.value.trim()
+    if (!props.multiline) {
+      this.value = this.value.replace(/\s+/g, ' ')
+    }
     if (props.onchange) {
       props.onchange(this.value)
     }

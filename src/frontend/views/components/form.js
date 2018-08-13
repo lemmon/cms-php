@@ -4,7 +4,7 @@ const Container = require('../../lib/components-container')
 const api = require('../../api')
 
 const loader = require('../partials/loader')
-const Input = require('./input')
+const Input = require('./textarea')
 const button = require('../partials/button')
 
 const actions = {

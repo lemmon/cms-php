@@ -38,6 +38,23 @@
   }
 }
 
+.field-textarea {
+  & .field-input {
+    resize: none;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+  }
+  & .field-preview {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+}
+
 .field-bt {
   box-shadow: inset 0 1px var(--black-10);
 }

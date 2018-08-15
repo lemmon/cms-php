@@ -1,2 +1,8 @@
 @import '-fields';
 @import '-buttons';
+
+.a-ul:focus,
+.a-anchor:focus .a-ul {
+  background-color: var(--yellow);
+  text-decoration: underline;
+}

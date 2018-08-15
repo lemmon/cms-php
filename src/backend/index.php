@@ -51,6 +51,7 @@ router([
   ['GET', '/**', function () {
     $root = dirname($_SERVER['SCRIPT_NAME']);
     $self = rtrim($_SERVER['SCRIPT_NAME'], '/');
+    $time = time();
     include __DIR__ . '/index.html.php';
   }],
 ], function () {

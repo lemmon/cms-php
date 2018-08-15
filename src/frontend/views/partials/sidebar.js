@@ -8,9 +8,9 @@ module.exports = ({ schema, collection, section }) => html`
       <div class="p05">
         <ul>
           <li><a
-            class="a-anchor"
-            href="/"
-          ><span class="a-ul ${!collection && !section && 'ul' || ''}">Dashboard</span></a></li>
+            class="a-ul ${!collection && !section && 'ul' || ''}"
+            href=${linkTo(`/`)}
+          >Dashboard</a></li>
         </ul>
       </div>
       <div class="p05">
@@ -18,26 +18,12 @@ module.exports = ({ schema, collection, section }) => html`
         <ul>
           ${schema.collections.map(item => html`
             <li><a
-              class="a-anchor"
-              href="/${item.id}"
-            ><span class="a-ul ${item === collection && 'ul' || ''}">${item.name}</span></a></li>
+              class="a-ul ${item === collection && 'ul' || ''}"
+              href=${linkTo(`/${item.id}`)}
+            >${item.name}</a></li>
           `)}
         </ul>
       </div>
-
-      <div class="p05">
-        <ul>
-          <li><a
-            class="a-anchor color-black-20"
-            href="#"
-            onclick=${e => {
-              e.preventDefault()
-              render()
-            }}
-          ><span class="a-ul">rerender</span></a></li>
-        </ul>
-      </div>
-
     </div>
   </aside>
 `

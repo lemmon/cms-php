@@ -6,3 +6,9 @@
   background-color: var(--yellow);
   text-decoration: underline;
 }
+
+.a-ul:active,
+.a-anchor:active .a-ul {
+  background-color: inherit;
+  text-decoration: underline;
+}

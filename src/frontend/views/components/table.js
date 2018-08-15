@@ -14,7 +14,7 @@ const table = ({ collection, data }) => {
     <div class="field-bt b-black-10 lh4">${data.map(item => html`
       <div class="p1 field-bb b-black-10"><a
         class="a-ul"
-        href="/${collection.id}/${item.id}"
+        href=${linkTo(`/${collection.id}/${item.id}`)}
       >${
         item[mainField.name] || html`<span class="color-black-50">n/a</span>`
       }</a></div>

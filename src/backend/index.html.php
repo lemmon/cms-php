@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="<?= $root ?>/admin.css?<?= $time ?>">
   <link rel="stylesheet" href="/abrusco/css/abrusco.min.css">
   <script>
-  window.root = '<?= $self ?>';
+  window.rootPath = '<?= $self ?>';
   </script>
   <script src="<?= $root ?>/admin.js?<?= $time ?>" defer></script>
   <style>

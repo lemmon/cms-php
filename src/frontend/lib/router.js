@@ -1,7 +1,7 @@
-const regs = {}
+const rootPath = window.rootPath
 
-function router(routes) {
-  const path = location.pathname.substr(window.root.length) || '/'
+module.exports = function router(routes) {
+  const path = rootPath ? location.pathname.split(rootPath, 2)[1] || '/' : location.pathname
   for (const [ route, cb ] of routes) {
     const match = typeof route === 'string' ? route === path : route.exec(path)
     if (match) {
@@ -9,5 +9,3 @@ function router(routes) {
     }
   }
 }
-
-module.exports = router

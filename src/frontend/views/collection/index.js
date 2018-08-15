@@ -11,7 +11,7 @@ module.exports = ({ collection }) => {
         <header class="p05 row items-center">
           <h1 class="p1 h3" style="line-height: 2rem;">${collection.name}</h1>
           <div class="p1 div color-black-20 self-stretch"></div>
-          <div class="p1 lh5"><a class="color-black-50 a-ul a-color-inherit" href="/${collection.id}/create">Create new\u2026</a></div>
+          <div class="p1 lh5"><a class="color-black-50 a-ul a-color-inherit" href=${linkTo(`/${collection.id}/create`)}>Create new\u2026</a></div>
         </header>
         <div class="p05">
           <div class="p1">

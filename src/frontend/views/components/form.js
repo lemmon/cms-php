@@ -105,7 +105,7 @@ module.exports = class Form extends Component {
     this.render(props, true)
     const action = this._currentAction || this._action
     this[actions[action]](props).then(res => {
-      redir(`/${props.collection.id}`)
+      redirTo(`/${this._collection.id}`)
     }).catch(err => {
       console.error(err)
       this._loading = false

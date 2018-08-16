@@ -17,7 +17,7 @@ module.exports = ({ collection, action, id }) => html`
           collection,
           action,
           id,
-        }, `${collection.id}__${action}`)}
+        }, `${collection.id}__${id}`)}
       </div>
     </div>
   </section>

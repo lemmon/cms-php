@@ -1,10 +1,10 @@
 const html = require('nanohtml')
 const Component = require('nanocomponent')
-const Container = require('../../lib/components-container')
 const api = require('../../api')
 
-const loader = require('../partials/loader')
 const Input = require('./textarea')
+
+const loader = require('../partials/loader')
 const button = require('../partials/button')
 
 const actions = {
@@ -18,26 +18,42 @@ module.exports = class Form extends Component {
   constructor(props) {
     super()
     const { id } = props
-    this._components = new Container()
-    this._action = props.action
+    this._collection = props.collection
+    this._defaultAction = props.action
     this._currentAction = null
-    this._data = !props.id && {} || null
-    this._id = props.id
+    this._entryId = id
+    this._data = !id && {} || null
+    this._fields = {}
     this._loading = false
-    if (props.id) {
-      api.get(`/${props.collection.id}/${props.id}.json`).then(res => {
+    if (id) {
+      api.get(`/${this._collection.id}/${id}.json`).then(res => {
         this._data = res
         this.render(props)
       })
     }
   }
 
-  component(Component, props, instanceId) {
-    return this._components.render(Component, props, instanceId)
+  field(_props) {
+    if (!this._fields[_props.name]) {
+      const props = Object.assign({}, _props, {
+        onupdate: props => Object.assign(props, {
+          value: this._data[props.name],
+        }),
+        onblur: c => {
+          this._data[props.name] = c.value || null
+        },
+      })
+      this._fields[_props.name] = {
+        props,
+        component: new Input(props),
+      }
+    }
+    const field = this._fields[_props.name]
+    return field.component.render(field.props)
   }
 
   createElement(props) {
-    const { collection, action, id, onsubmit } = props
+    const { action, id, onsubmit } = props
     return this._data && html`
       <div>
         <form
@@ -46,14 +62,9 @@ module.exports = class Form extends Component {
           onsubmit=${e => this.handleSubmit(e, props)}
         >
           <div class="p05">
-            ${collection.fields.map(field => html`
+            ${this._collection.fields.map(field => html`
               <div class="p1">
-                ${this.component(Input, Object.assign({}, field, {
-                  value: this._data[field.name],
-                  onchange: value => {
-                    this._data[field.name] = value || null
-                  },
-                }), field.name)}
+                ${this.field(field)}
               </div>
             `)}
             <div class="row justify-between">
@@ -70,7 +81,7 @@ module.exports = class Form extends Component {
                 <div class="p1">
                   ${button({
                     type: 'submit',
-                    caption: '\u2327',
+                    caption: 'Delete',
                     style: 'clear',
                     color: 'red',
                     disabled: this._loading,
@@ -98,35 +109,54 @@ module.exports = class Form extends Component {
     return !this._loading || force
   }
 
+  fields() {
+    return this._collection.fields.map(field => (
+      this._fields[field.name]
+    ))
+  }
+
+  validate() {
+    return Promise.all(this.fields().map(({ component, props }) => (
+      component.validate(props)
+    )))
+  }
+
   handleSubmit(e, props) {
     e.preventDefault()
     document.activeElement.blur()
+
     this._loading = true
     this.render(props, true)
-    const action = this._currentAction || this._action
-    this[actions[action]](props).then(res => {
+    const action = actions[this._currentAction || this._defaultAction]
+
+    this[action]().then(() => {
+      // redir to listing
       redirTo(`/${this._collection.id}`)
     }).catch(err => {
-      console.error(err)
+      // error
       this._loading = false
       this._currentAction = null
       this.render(props)
     })
   }
 
-  handleCreate(props) {
-    return api.post(`/${props.collection.id}`, this._data)
+  handleCreate() {
+    return this.validate().then(() => (
+      api.post(`/${this._collection.id}`, this._data)
+    ))
   }
 
-  handleUpdate(props) {
-    return api.post(`/${props.collection.id}/${props.id}`, Object.assign({}, this._data, {
-      id: undefined,
-      created: undefined,
-      updated: undefined,
-    }))
+  handleUpdate() {
+    return this.validate().then(() => (
+      api.post(`/${this._collection.id}/${this._entryId}`, Object.assign({}, this._data, {
+        id: undefined,
+        created: undefined,
+        updated: undefined,
+      }))
+    ))
   }
 
-  handleDelete(props) {
-    return api.delete(`/${props.collection.id}/${props.id}`, this._data)
+  handleDelete(data) {
+    return api.delete(`/${this._collection.id}/${this._entryId}`)
   }
 }

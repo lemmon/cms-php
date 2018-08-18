@@ -2,6 +2,8 @@
 
 namespace app;
 
+require __DIR__ . '/lib/functions.php';
+
 require __DIR__ . '/lib/config.php';
 require __DIR__ . '/lib/debug.php';
 require __DIR__ . '/lib/http.php';

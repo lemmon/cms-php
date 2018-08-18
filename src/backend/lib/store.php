@@ -11,11 +11,11 @@ function create(string $collection, array $_data): array
   validate_data($_data);
   $id = id();
   $file = get_file($collection, $id);
-  $data = array_replace([
+  $data = array_filter_recursive(array_replace([
     'id' => $id,
   ], $_data, [
     'created' => microtime(TRUE),
-  ]);
+  ]));
   file_put_contents($file, json_encode($data));
   return $data;
 }
@@ -48,9 +48,9 @@ function update(string $collection, string $id, array $_data)
   }
   $data_update = validate_data($_data);
   $data_current = read_file($file);
-  $data = array_replace($data_current, $data_update, [
+  $data = array_filter_recursive(array_replace($data_current, $data_update, [
     'updated' => microtime(TRUE),
-  ]);
+  ]));
   file_put_contents($file, json_encode($data));
   return $data;
 }

@@ -1,5 +1,4 @@
 const html = require('nanohtml')
-const Component = require('nanocomponent')
 
 module.exports = (props) => html`
   <button

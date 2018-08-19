@@ -16,14 +16,18 @@ function create(string $collection, array $_data): array
   ], $_data, [
     'created' => microtime(TRUE),
   ]));
-  file_put_contents($file, json_encode($data));
-  return $data;
+  $success = file_put_contents($file, json_encode($data));
+  return [
+    'success' => $success ? TRUE : FALSE,
+  ];
 }
 
 function read(string $collection, string $id)
 {
   $dir = get_dir($collection);
-  return read_file("${dir}/${id}.json");
+  return [
+    'data' => read_file("${dir}/${id}.json"),
+  ];
 }
 
 function read_file(string $file)
@@ -37,7 +41,9 @@ function read_file(string $file)
 function read_many(string $collection): array
 {
   $dir = get_dir($collection);
-  return array_map(__NAMESPACE__ . '\read_file', glob("${dir}/*.json"));
+  return [
+    'data' => array_map(__NAMESPACE__ . '\read_file', glob("${dir}/*.json")),
+  ];
 }
 
 function update(string $collection, string $id, array $_data)
@@ -51,8 +57,10 @@ function update(string $collection, string $id, array $_data)
   $data = array_filter_recursive(array_replace($data_current, $data_update, [
     'updated' => microtime(TRUE),
   ]));
-  file_put_contents($file, json_encode($data));
-  return $data;
+  $success = file_put_contents($file, json_encode($data));
+  return [
+    'success' => $success ? TRUE : FALSE,
+  ];
 }
 
 function delete(string $collection, string $id): bool

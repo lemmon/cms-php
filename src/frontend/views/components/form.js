@@ -18,29 +18,35 @@ module.exports = class Form extends Component {
   constructor(props) {
     super()
     const { id } = props
-    this._collection = props.collection
-    this._defaultAction = props.action
-    this._currentAction = null
-    this._entryId = id
-    this._data = !id && {} || null
-    this._fields = {}
-    this._loading = false
+    this.state = {
+      collection: props.collection,
+      defaultAction: props.action,
+      currentAction: null,
+      id: id,
+      data: !id && {} || null,
+      fields: {},
+      loading: false,
+    }
     if (id) {
-      api.get(`/${this._collection.name}/${id}.json`).then(res => {
-        this._data = res
+      api.get(`/${this.state.collection.name}/${id}.json`).then(res => {
+        this.state.data = res.data
         this.render(props)
       })
     }
   }
 
   field(_props) {
-    if (!this._fields[_props.name]) {
+    const {
+      fields,
+      data,
+    } = this.state
+    if (!fields[_props.name]) {
       const props = Object.assign({}, _props, {
         onupdate: props => Object.assign(props, {
-          value: this._data[props.name],
+          value: data[props.name],
         }),
         onblur: c => {
-          this._data[props.name] = c.value || null
+          data[props.name] = c.value || null
         },
         onkeypress: e => {
           if (e.keyCode === 13 && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
@@ -49,18 +55,24 @@ module.exports = class Form extends Component {
           }
         }
       })
-      this._fields[_props.name] = {
+      fields[_props.name] = {
         props,
         component: new Input(props),
       }
     }
-    const field = this._fields[_props.name]
+    const field = fields[_props.name]
     return field.component.render(field.props)
   }
 
   createElement(props) {
     const { action, id, onsubmit } = props
-    return this._data && html`
+    const {
+      collection,
+      data,
+      loading,
+      currentAction,
+    } = this.state
+    return data && html`
       <div>
         <form
           method="post"
@@ -68,7 +80,7 @@ module.exports = class Form extends Component {
           onsubmit=${e => this.handleSubmit(e, props)}
         >
           <div class="p05">
-            ${this._collection.fields.map(field => html`
+            ${collection.fields.map(field => html`
               <div class="p1">
                 ${this.field(field)}
               </div>
@@ -79,8 +91,8 @@ module.exports = class Form extends Component {
                   type: 'submit',
                   caption: 'Submit Form',
                   color: 'blue',
-                  disabled: this._loading,
-                  loading: this._loading && !this._currentAction,
+                  disabled: loading,
+                  loading: loading && !currentAction,
                 })}
               </div>
               ${id && html`
@@ -90,10 +102,10 @@ module.exports = class Form extends Component {
                     caption: 'Delete',
                     style: 'clear',
                     color: 'red',
-                    disabled: this._loading,
-                    loading: this._loading && this._currentAction === 'delete',
+                    disabled: loading,
+                    loading: loading && currentAction === 'delete',
                     onclick: e => {
-                      this._currentAction = 'delete'
+                      this.state.currentAction = 'delete'
                     },
                   })}
                 </div>
@@ -112,13 +124,17 @@ module.exports = class Form extends Component {
   }
 
   update(props, force) {
-    return !this._loading || force
+    return !this.state.loading || force
   }
 
   fields() {
-    return this._collection.fields.map(field => (
-      this._fields[field.name]
+    return this.state.collection.fields.map(field => (
+      this.state.fields[field.name]
     ))
+  }
+
+  data() {
+    return this.state.data
   }
 
   validate() {
@@ -129,40 +145,51 @@ module.exports = class Form extends Component {
 
   handleSubmit(e, props) {
     e.preventDefault()
-    document.activeElement.blur()
+    const {
+      collection,
+      currentAction,
+      defaultAction,
+    } = this.state
 
-    this._loading = true
+    if (document.activeElement.closest('.field')) {
+      document.activeElement.blur()
+    }
+
+    this.state.loading = true
     this.render(props, true)
-    const action = actions[this._currentAction || this._defaultAction]
-
+    const action = actions[currentAction || defaultAction]
     this[action]().then(() => {
       // redir to listing
-      redirTo(`/${this._collection.name}`)
+      redirTo(`/${collection.name}`)
     }).catch(err => {
       // error
-      this._loading = false
-      this._currentAction = null
+      this.state.loading = false
+      this.state.currentAction = null
       this.render(props)
     })
   }
 
   handleCreate() {
     return this.validate().then(() => (
-      api.post(`/${this._collection.name}`, this._data)
+      api.post(`/${this.state.collection.name}`, {
+        data: this.data(),
+      })
     ))
   }
 
   handleUpdate() {
     return this.validate().then(() => (
-      api.post(`/${this._collection.name}/${this._entryId}`, Object.assign({}, this._data, {
-        id: undefined,
-        created: undefined,
-        updated: undefined,
-      }))
+      api.post(`/${this.state.collection.name}/${this.state.id}`, {
+        data: Object.assign({}, this.data(), {
+          id: undefined,
+          created: undefined,
+          updated: undefined,
+        }),
+      })
     ))
   }
 
   handleDelete(data) {
-    return api.delete(`/${this._collection.name}/${this._entryId}`)
+    return api.delete(`/${this.state.collection.name}/${this.state.id}`)
   }
 }

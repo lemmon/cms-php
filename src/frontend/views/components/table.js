@@ -27,16 +27,20 @@ module.exports = class Table extends Component {
   constructor(props) {
     super()
     const { collection } = props
+    this.state = {}
     api.get(`/${collection.name}.json`).then(res => {
-      this.data = res
+      this.state.data = res.data
       this.render(props)
     })
   }
 
   createElement({ collection }) {
-    return this.data ? table({
+    const {
+      data,
+    } = this.state
+    return data ? table({
       collection,
-      data: this.data,
+      data,
     }) : loader()
   }
 

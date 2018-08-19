@@ -33,25 +33,17 @@ router([
   }],
   // create entry
   ['POST', '/:name', function ($m) {
-    $data = json_decode(file_get_contents('php://input'), TRUE);
-    json([
-      'success' => TRUE,
-      'data' => store\create($m['name'], $data),
-    ]);
+    $input = json_decode(file_get_contents('php://input'), TRUE);
+    json(store\create($m['name'], $input['data']));
   }],
   // update entry
   ['POST', '/:name/:id', function ($m) {
-    $data = json_decode(file_get_contents('php://input'), TRUE);
-    json([
-      'success' => TRUE,
-      'data' => store\update($m['name'], $m['id'], $data),
-    ]);
+    $input = json_decode(file_get_contents('php://input'), TRUE);
+    json(store\update($m['name'], $m['id'], $input['data']));
   }],
   // delete entry
   ['DELETE', '/:name/:id', function ($m) {
-    json([
-      'success' => store\delete($m['name'], $m['id']),
-    ]);
+    json(store\delete($m['name'], $m['id']));
   }],
   // app
   ['GET', '/**', function () {

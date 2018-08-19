@@ -41,6 +41,9 @@ module.exports = class Field extends Component {
               if (e.keyCode === 13 && !props.multiline) {
                 e.preventDefault()
               }
+              if (props.onkeypress) {
+                props.onkeypress(e)
+              }
             }}
           >${this.value || ``}</textarea>
           <div class="p1 lh4 row">

@@ -42,6 +42,12 @@ module.exports = class Form extends Component {
         onblur: c => {
           this._data[props.name] = c.value || null
         },
+        onkeypress: e => {
+          if (e.keyCode === 13 && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
+            e.preventDefault()
+            this.handleSubmit(e, props)
+          }
+        }
       })
       this._fields[_props.name] = {
         props,

@@ -26,7 +26,7 @@ module.exports = class Form extends Component {
     this._fields = {}
     this._loading = false
     if (id) {
-      api.get(`/${this._collection.id}/${id}.json`).then(res => {
+      api.get(`/${this._collection.name}/${id}.json`).then(res => {
         this._data = res
         this.render(props)
       })
@@ -137,7 +137,7 @@ module.exports = class Form extends Component {
 
     this[action]().then(() => {
       // redir to listing
-      redirTo(`/${this._collection.id}`)
+      redirTo(`/${this._collection.name}`)
     }).catch(err => {
       // error
       this._loading = false
@@ -148,13 +148,13 @@ module.exports = class Form extends Component {
 
   handleCreate() {
     return this.validate().then(() => (
-      api.post(`/${this._collection.id}`, this._data)
+      api.post(`/${this._collection.name}`, this._data)
     ))
   }
 
   handleUpdate() {
     return this.validate().then(() => (
-      api.post(`/${this._collection.id}/${this._entryId}`, Object.assign({}, this._data, {
+      api.post(`/${this._collection.name}/${this._entryId}`, Object.assign({}, this._data, {
         id: undefined,
         created: undefined,
         updated: undefined,
@@ -163,6 +163,6 @@ module.exports = class Form extends Component {
   }
 
   handleDelete(data) {
-    return api.delete(`/${this._collection.id}/${this._entryId}`)
+    return api.delete(`/${this._collection.name}/${this._entryId}`)
   }
 }

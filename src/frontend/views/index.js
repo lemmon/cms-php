@@ -57,12 +57,12 @@ function findcollection(section) {
     schema,
     collection,
   } = state
-  if (collection && collection.id === section) {
+  if (collection && collection.name === section) {
     return collection
   }
-  for (const item of schema.collections) {
-    if (item.id === section) {
-      return state.collection = item
+  for (const collection of schema.collections) {
+    if (collection.name === section) {
+      return state.collection = collection
     }
   }
 }

@@ -8,4 +8,4 @@ mkdir -pv develop
 mkdir -pv -m 777 cache
 mkdir -pv -m 777 store
 ln -snv ../src/backend/index.php develop/admin.php
-ln -snv ../config/index.php develop/admin.config.php
+ln -snv ../config/config.php develop/admin.config.php

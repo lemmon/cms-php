@@ -10,14 +10,18 @@ require __DIR__ . '/lib/http.php';
 require __DIR__ . '/lib/id.php';
 require __DIR__ . '/lib/json.php';
 require __DIR__ . '/lib/router.php';
+require __DIR__ . '/lib/schema.php';
 require __DIR__ . '/lib/store.php';
 
 router([
   // schema
   ['GET', '/schema.json', function () {
-    json([
-      'schema' => parse_schema(config()['schema']),
-    ]);
+    $schema = schema\get_schema();
+    $schema['collections'] = array_values(array_map(function ($coll) {
+      $coll['fields'] = array_values($coll['fields']);
+      return $coll;
+    }, $schema['collections']));
+    json($schema);
   }],
   // read collection
   ['GET', '/:name.json', function ($m) {

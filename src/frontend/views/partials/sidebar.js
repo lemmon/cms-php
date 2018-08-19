@@ -19,8 +19,8 @@ module.exports = ({ schema, collection, section }) => html`
           ${schema.collections.map(item => html`
             <li><a
               class="a-ul ${item === collection && 'ul' || ''}"
-              href=${linkTo(`/${item.id}`)}
-            >${item.name}</a></li>
+              href=${linkTo(`/${item.name}`)}
+            >${item.caption}</a></li>
           `)}
         </ul>
       </div>

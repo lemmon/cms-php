@@ -14,7 +14,7 @@ const table = ({ collection, data }) => {
     <div class="field-bt b-black-10 lh4">${data.map(item => html`
       <div class="p1 field-bb b-black-10"><a
         class="a-ul"
-        href=${linkTo(`/${collection.id}/${item.id}`)}
+        href=${linkTo(`/${collection.name}/${item.id}`)}
       >${
         item[mainField.name] || html`<span class="color-black-50">n/a</span>`
       }</a></div>
@@ -27,7 +27,7 @@ module.exports = class Table extends Component {
   constructor(props) {
     super()
     const { collection } = props
-    api.get(`/${collection.id}.json`).then(res => {
+    api.get(`/${collection.name}.json`).then(res => {
       this.data = res
       this.render(props)
     })

@@ -10,6 +10,12 @@ define('VALID_FIELD_TYPES', [
   'email',
   'slug',
 ]);
+define('RESERVED_FIELD_NAMES', [
+  'id',
+  'created',
+  'updated',
+  'published',
+]);
 
 function get_schema() {
   static $schema;
@@ -74,6 +80,9 @@ function parse_fields($fields, $collection_name) {
     // name
     if (isset($props['name'])) {
       throw new \Exception("schema: invalid field property: name (${name} in collection ${collection_name})");
+    }
+    if (in_array($name, RESERVED_FIELD_NAMES)) {
+      throw new \Exception("schema: field name is reserved: ${name} (in collection ${collection_name})");
     }
     $props['name'] = $name;
     // type

@@ -29,7 +29,7 @@ module.exports = class Form extends Component {
     }
     if (id) {
       api.get(`/${this.state.collection.name}/${id}.json`).then(res => {
-        this.state.data = res.data
+        this.state.data = res.data || false
         this.render(props)
       })
     }
@@ -113,6 +113,12 @@ module.exports = class Form extends Component {
             </div>
           </div>
         </form>
+      </div>
+    ` || data === false && html`
+      <div class="p05">
+        <div class="p1">
+          <div>Entry not found.</div>
+        </div>
       </div>
     ` || html`
       <div class="p05">

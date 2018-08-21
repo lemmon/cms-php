@@ -6,24 +6,26 @@ module.exports = class Field extends Component {
   constructor(props) {
     super()
     this.name = props.name
-    this.value = props.value || null
-    this.touched = false
-    this.validating = false
-    this.valid = undefined
-    this.errors = null
+    this.value = props.value
+    this.state = {
+      initialValue: undefined,
+      touched: false,
+      validating: false,
+      errors: null,
+    }
     this.update(props)
   }
 
   createElement(props) {
     return html`
-      <label class="field ${this.touched && this.errors && `field-error` || ``}">
+      <label class="field ${this.state.touched && this.state.errors && `field-error` || ``}">
         <div
           class="field-label f2 fw500 color-black-40 bg-white"
-        >${props.name}</div>
-        ${this.errors && html`
+        >${this.name}</div>
+        ${this.state.errors && html`
           <div
             class="field-note f2 fw500 color-black-40 bg-white"
-          >${this.errors[0]}</div>
+          >${this.state.errors[0]}</div>
         ` || props.required && html`
         <div
           class="field-note f2 fw500 color-black-40 bg-white"
@@ -31,10 +33,9 @@ module.exports = class Field extends Component {
         ` || ``}
         <div class="field-textarea">
           <textarea
-            name=${props.name}
+            name=${this.name}
             class="field-input field-border p1 lh4 bg-white"
             oninput=${e => this.handleInput(e, props)}
-            onchange=${e => this.handleChange(e, props)}
             onfocus=${e => this.handleFocus(e, props)}
             onblur=${e => this.handleBlur(e, props)}
             onkeypress=${e => {
@@ -69,8 +70,7 @@ module.exports = class Field extends Component {
       props = props.onupdate(props)
     }
     if (props.value !== undefined && props.value !== this.value) {
-      this.value = props.value || null
-      this.valid = undefined
+      this.value = props.value
     }
     return true
   }
@@ -85,11 +85,26 @@ module.exports = class Field extends Component {
     this.updateValue()
   }
 
-  validate(props, force = false) {
-    this.touched = true
-    this.validating = true
+  sanitize(props) {
+    // trim
+    this.value = this.value && this.value.trim()
+    // multiline
+    if (this.value && !props.multiline) {
+      this.value = this.value.replace(/\s+/g, ' ')
+    }
+    // value
+    this.state.initialValue = this.value
+  }
+
+  validate(props, sanitize = true) {
+    this.state.touched = true
+    this.state.validating = true
     return new Promise((resolve, reject) => {
       const errors = []
+      // sanitize
+      if (this.state.initialValue !== this.value) {
+        this.sanitize(props)
+      }
       // required
       if (props.required && !this.value) {
         errors.push(`field is required`)
@@ -97,51 +112,43 @@ module.exports = class Field extends Component {
       // resolve
       if (errors.length === 0) {
         // no errors
-        this.valid = true
-        this.errors = null
+        this.state.errors = null
         resolve(this)
       } else {
         // found errors
-        this.valid = false
-        this.errors = errors
+        this.state.errors = errors
         reject(errors)
       }
-      this.validating = false
+      this.state.validating = false
       this.render(props)
     })
   }
 
   handleInput(e, props) {
-    if (this.errors) {
-      this.valid = undefined
-      this.errors = null
+    if (this.state.errors) {
+      this.state.errors = null
       this.element.classList.remove('field-error')
     }
     this.value = e.target.value
     this.updateValue()
   }
 
-  handleChange(e, props) {
-    if (props.onchange) {
-      props.onchange(this)
-    }
-  }
-
   handleFocus(e, props) {
+    this.state.initialValue = this.value
     if (props.onfocus) {
       props.onfocus(this)
     }
   }
 
   handleBlur(e, props) {
-    this.touched = true
-    this.value = e.target.value.trim()
-    if (!props.multiline) {
-      this.value = this.value.replace(/\s+/g, ' ')
+    this.state.touched = true
+    if (props.onchange && this.state.initialValue !== this.value) {
+      this.sanitize(props)
+      props.onchange(this)
     }
     if (props.onblur) {
       props.onblur(this)
     }
-    this.validate(props).catch(err => {})
+    this.validate(props, false).catch( err => {} )
   }
 }

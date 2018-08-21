@@ -45,7 +45,7 @@ module.exports = class Form extends Component {
         onupdate: props => Object.assign(props, {
           value: data[props.name],
         }),
-        onblur: c => {
+        onchange: c => {
           data[props.name] = c.value || null
         },
         onkeypress: e => {
@@ -140,13 +140,19 @@ module.exports = class Form extends Component {
   }
 
   data() {
-    return this.state.data
+    return this.state.collection.fields.reduce((data, field) => Object.assign(data, {
+      [field.name]: this.state.fields[field.name].component.value || null,
+    }), {})
   }
 
   validate() {
     return Promise.all(this.fields().map(({ component, props }) => (
+      // validate fields
       component.validate(props)
-    )))
+    ))).then(fields => fields.reduce((data, field) => Object.assign(data, {
+      // map fields to `name`: `value` object
+      [field.name]: field.value || null,
+    }), {}))
   }
 
   handleSubmit(e, props) {
@@ -156,11 +162,6 @@ module.exports = class Form extends Component {
       currentAction,
       defaultAction,
     } = this.state
-
-    if (document.activeElement.closest('.field')) {
-      document.activeElement.blur()
-    }
-
     this.state.loading = true
     this.render(props, true)
     const action = actions[currentAction || defaultAction]
@@ -176,17 +177,17 @@ module.exports = class Form extends Component {
   }
 
   handleCreate() {
-    return this.validate().then(() => (
+    return this.validate().then(data => (
       api.post(`/${this.state.collection.name}`, {
-        data: this.data(),
+        data,
       })
     ))
   }
 
   handleUpdate() {
-    return this.validate().then(() => (
+    return this.validate().then(data => (
       api.post(`/${this.state.collection.name}/${this.state.id}`, {
-        data: Object.assign({}, this.data(), {
+        data: Object.assign({}, data, {
           id: undefined,
           created: undefined,
           updated: undefined,

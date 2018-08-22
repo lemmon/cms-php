@@ -8,7 +8,7 @@ module.exports = class Field extends Component {
     this.name = props.name
     this.value = props.value
     this.state = {
-      initialValue: undefined,
+      initialValue: props.value,
       touched: false,
       validating: false,
       errors: null,
@@ -86,25 +86,31 @@ module.exports = class Field extends Component {
   }
 
   sanitize(props) {
-    // trim
-    this.value = this.value && this.value.trim()
-    // multiline
-    if (this.value && !props.multiline) {
-      this.value = this.value.replace(/\s+/g, ' ')
+    if (this.state.initialValue !== this.value) {
+      // trim
+      this.value = this.value && this.value.trim()
+      // multiline
+      if (this.value && !props.multiline) {
+        this.value = this.value.replace(/\s+/g, ' ')
+      }
+      // onchange event
+      if (props.onchange) {
+        props.onchange(this)
+      }
+      // update preview
+      this.updateValue()
+      // initial value
+      this.state.initialValue = this.value
     }
-    // value
-    this.state.initialValue = this.value
   }
 
-  validate(props, sanitize = true) {
+  validate(props) {
     this.state.touched = true
     this.state.validating = true
     return new Promise((resolve, reject) => {
       const errors = []
       // sanitize
-      if (this.state.initialValue !== this.value) {
-        this.sanitize(props)
-      }
+      this.sanitize(props)
       // required
       if (props.required && !this.value) {
         errors.push(`field is required`)
@@ -125,16 +131,18 @@ module.exports = class Field extends Component {
   }
 
   handleInput(e, props) {
+    this.value = e.target.value
     if (this.state.errors) {
       this.state.errors = null
       this.element.classList.remove('field-error')
     }
-    this.value = e.target.value
+    if (props.onchange) {
+      props.onchange(this)
+    }
     this.updateValue()
   }
 
   handleFocus(e, props) {
-    this.state.initialValue = this.value
     if (props.onfocus) {
       props.onfocus(this)
     }
@@ -142,13 +150,10 @@ module.exports = class Field extends Component {
 
   handleBlur(e, props) {
     this.state.touched = true
-    if (props.onchange && this.state.initialValue !== this.value) {
-      this.sanitize(props)
-      props.onchange(this)
-    }
+    this.sanitize(props)
     if (props.onblur) {
       props.onblur(this)
     }
-    this.validate(props, false).catch( err => {} )
+    this.validate(props).catch( err => {} )
   }
 }

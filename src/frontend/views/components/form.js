@@ -46,7 +46,7 @@ module.exports = class Form extends Component {
           value: data[props.name],
         }),
         onchange: c => {
-          data[props.name] = c.value || null
+          data[props.name] = c.value
         },
         onkeypress: e => {
           if (e.keyCode === 13 && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {

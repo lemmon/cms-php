@@ -86,12 +86,12 @@ function parse_fields($fields, $collection_name) {
     }
     $props['name'] = $name;
     // type
-    if (empty($field['type'])) {
-      $field['type'] = DEFAULT_FIELD_TYPE;
+    if (empty($props['type'])) {
+      $props['type'] = DEFAULT_FIELD_TYPE;
     }
     // type: validity
-    if (!in_array($field['type'], VALID_FIELD_TYPES)) {
-      throw new \Exception('schema: invalid field type: ' . $field['type']);
+    if (!in_array($props['type'], VALID_FIELD_TYPES)) {
+      throw new \Exception('schema: invalid field type: ' . $props['type']);
     }
     // assign
     $res[$name] = array_filter($props);

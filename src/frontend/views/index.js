@@ -38,7 +38,7 @@ const renderSection = ({ schema, collection, section }) => [
 ]
 
 module.exports = () => html`
-  <body class="row">
+  <body class="row p1">
     ${router([
       [MATCH_HOME, () => renderDashboard({
         schema: state.schema,

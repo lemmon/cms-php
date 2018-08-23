@@ -20,15 +20,15 @@ module.exports = class Field extends Component {
     return html`
       <label class="field ${this.state.touched && this.state.errors && `field-error` || ``}">
         <div
-          class="field-label f2 fw500 color-black-40 bg-white"
+          class="field-label f4 fw500 color-black-40 bg-white"
         >${this.name}</div>
         ${this.state.errors && html`
           <div
-            class="field-note f2 fw500 color-black-40 bg-white"
+            class="field-note f4 fw500 color-black-40 bg-white"
           >${this.state.errors[0]}</div>
         ` || props.required && html`
         <div
-          class="field-note f2 fw500 color-black-40 bg-white"
+          class="field-note f4 fw500 color-black-40 bg-white"
         >required</div>
         ` || ``}
         <div class="field-textarea">

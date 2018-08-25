@@ -14,3 +14,8 @@ function array_filter_recursive(array $arr): array
   }
   return $arr;
 }
+
+function humanize(string $str): string
+{
+  return ucwords($str);
+}

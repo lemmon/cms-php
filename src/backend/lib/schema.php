@@ -93,6 +93,10 @@ function parse_fields($fields, $collection_name) {
     if (!in_array($props['type'], VALID_FIELD_TYPES)) {
       throw new \Exception('schema: invalid field type: ' . $props['type']);
     }
+    // label
+    if (empty($props['label'])) {
+      $props['label'] = humanize($name);
+    }
     // assign
     $res[$name] = array_filter($props);
   }

@@ -21,7 +21,7 @@ module.exports = class Field extends Component {
       <label class="field ${this.state.touched && this.state.errors && `field-error` || ``}">
         <div
           class="field-label f4 fw500 color-black-40 bg-white"
-        >${this.name}</div>
+        >${props.label}</div>
         ${this.state.errors && html`
           <div
             class="field-note f4 fw500 color-black-40 bg-white"

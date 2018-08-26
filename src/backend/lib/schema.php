@@ -10,6 +10,12 @@ define('VALID_FIELD_TYPES', [
   'email',
   'slug',
 ]);
+define('RESERVED_COLLECTION_NAMES', [
+  'login',
+  'logout',
+  'settings',
+  'users',
+]);
 define('RESERVED_FIELD_NAMES', [
   'id',
   'created',
@@ -42,6 +48,8 @@ function parse_collections($collections) {
       throw new \Exception('schema: collection name not defined');
     } elseif (!preg_match('/^[a-z]+$/', $name)) {
       throw new \Exception('schema: invalid collection name: ' . $name);
+    } elseif (in_array($name, RESERVED_COLLECTION_NAMES)) {
+      throw new \Exception("schema: collection name is reserved: ${name}");
     }
     // props
     if (!is_array($props)) {

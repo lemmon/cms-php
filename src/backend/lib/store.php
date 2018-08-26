@@ -5,6 +5,7 @@ namespace app\store;
 use function app\{config, id, error, dump};
 
 define('ROOT', config()['store']);
+define('ENTRY_FILE', '%s/entry-%s.json');
 
 function create(string $collection, array $_data): array
 {
@@ -24,9 +25,8 @@ function create(string $collection, array $_data): array
 
 function read(string $collection, string $id)
 {
-  $dir = get_dir($collection);
   return [
-    'data' => read_file("${dir}/${id}.json"),
+    'data' => read_file(get_file($collection, $id)),
   ];
 }
 
@@ -40,9 +40,11 @@ function read_file(string $file)
 
 function read_many(string $collection): array
 {
-  $dir = get_dir($collection);
   return [
-    'data' => array_map(__NAMESPACE__ . '\read_file', glob("${dir}/*.json")),
+    'data' => array_map(__NAMESPACE__ . '\read_file', glob(sprintf(ENTRY_FILE
+      , get_dir($collection)
+      , '*'
+    ))),
   ];
 }
 
@@ -88,8 +90,10 @@ function get_dir(string $collection): string
 
 function get_file(string $collection, string $id): string
 {
-  $dir = get_dir($collection);
-  return "${dir}/${id}.json";
+  return sprintf(ENTRY_FILE
+    , get_dir($collection)
+    , $id
+  );
 }
 
 function validate_data(array $data): array

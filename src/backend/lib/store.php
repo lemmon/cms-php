@@ -71,7 +71,11 @@ function delete(string $collection, string $id): bool
   if (!file_exists($file)) {
     error(400, 'Entry not found');
   }
-  return unlink($file);
+  return rename($file, sprintf('%s/%s-%s.json'
+    , get_dir('trash')
+    , $collection
+    , $id
+  ));
 }
 
 function get_dir(string $collection): string

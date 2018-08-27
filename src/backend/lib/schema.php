@@ -14,6 +14,7 @@ define('RESERVED_COLLECTION_NAMES', [
   'login',
   'logout',
   'settings',
+  'trash',
   'users',
 ]);
 define('RESERVED_FIELD_NAMES', [

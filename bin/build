@@ -1,0 +1,20 @@
+#!/bin/sh
+cd "$(dirname $0)/.."
+BASE_DIR=`pwd`
+
+rm -rf dist/*
+
+mkdir -pv dist
+
+browserify src/app -t [ babelify --presets [ @babel/preset-env ] ] | uglifyjs > dist/~garner.js
+abrusco src/css -o dist/~garner.css --minify
+
+ln -snv ../config/garner.config.php dist
+
+box build -v
+box add -v dist/garner.phar dist/~garner.js garner.js
+box add -v dist/garner.phar dist/~garner.css garner.css
+mv dist/garner.phar dist/garner.php
+
+rm -v dist/~garner.js
+rm -v dist/~garner.css

@@ -1,0 +1,14 @@
+{
+    "directories": ["src/server"],
+    "main": "src/server/index.php",
+    "map": [
+      { "src/server": "" }
+    ],
+    "replacements": {
+      "START": "*/",
+      "END": "/*"
+    },
+    "output": "dist/garner.phar",
+    "stub": true,
+    "shebang": false
+}

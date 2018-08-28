@@ -7,5 +7,5 @@ rm -rf develop/*
 mkdir -pv develop
 mkdir -pv -m 777 cache
 mkdir -pv -m 777 store
-ln -snv ../src/backend/index.php develop/admin.php
-ln -snv ../config/config.php develop/admin.config.php
+ln -snv ../src/server/index.php develop/garner.php
+ln -snv ../config/garner.config.php develop

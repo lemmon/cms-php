@@ -24,6 +24,18 @@ module.exports = ({ schema, collection, section }) => html`
           `)}
         </ul>
       </div>
+      <div class="p05">
+        <ul>
+          <li><a
+            class="a-ul color-black-20"
+            href="#"
+            onclick=${e => {
+              e.preventDefault()
+              render()
+            }}
+          >render</a></li>
+        </ul>
+      </div>
     </div>
   </aside>
 `

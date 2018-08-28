@@ -6,7 +6,7 @@ function config()
 {
   static $config;
   if (!$config) {
-    $config = include getcwd() . '/admin.config.php';
+    $config = include __CWD__ . '/garner.config.php';
   }
   return $config;
 }

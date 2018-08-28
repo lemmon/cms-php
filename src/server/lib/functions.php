@@ -1,5 +1,7 @@
 <?php
 
+define('__CWD__', getcwd());
+
 function array_filter_recursive(array $arr): array
 {
   foreach ($arr as $i => $value) {

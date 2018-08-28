@@ -11,9 +11,11 @@ define('VALID_FIELD_TYPES', [
   'slug',
 ]);
 define('RESERVED_COLLECTION_NAMES', [
+  'cache',
   'login',
   'logout',
   'settings',
+  'store',
   'trash',
   'users',
 ]);

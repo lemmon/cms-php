@@ -13,6 +13,16 @@ require __DIR__ . '/lib/router.php';
 require __DIR__ . '/lib/schema.php';
 require __DIR__ . '/lib/store.php';
 
+define('OPTIONS', array_replace([
+  'dir' => __CWD__,
+  'build' => time(),
+], [
+  /*@START@
+  'dir' => __DIR__,
+  'build' => filemtime(__DIR__),
+  @END@*/
+]));
+
 router([
   // schema
   ['GET', '/schema.json', function () {
@@ -45,12 +55,38 @@ router([
   ['DELETE', '/:name/:id', function ($m) {
     json(store\delete($m['name'], $m['id']));
   }],
+  // static
+  ['GET', '/garner.(\d+).(css|js)', function ($m) {
+    $file = OPTIONS['dir'] . "/garner.${m[2]}";
+    if (!file_exists($file)) {
+      return FALSE;
+    }
+    switch ($m[2]) {
+      case 'css': header('Content-type: text/css; charset=utf-8'); break;
+      case 'js': header('Content-type: application/javascript; charset=utf-8'); break;
+      default: return FALSE;
+    }
+    header('Content-Length: ' . filesize($file));
+    readfile($file);
+  }],
+  // info
+  ['GET', '/info', function () {
+    dump([
+      'dir' => __DIR__,
+      'cwd' => __CWD__,
+      'http' => HTTP,
+      'options' => OPTIONS,
+      'file_dir' => file_exists(__DIR__ . '/garner.js'),
+      'file_cwd' => file_exists(__CWD__ . '/garner.js'),
+      '_f' => OPTIONS['dir'] . '/garner.js',
+      '_y' => file_exists(OPTIONS['dir'] . '/garner.js'),
+    ]);
+  }],
   // app
   ['GET', '/**', function () {
-    $root = dirname($_SERVER['SCRIPT_NAME']);
-    $self = rtrim($_SERVER['SCRIPT_NAME'], '/');
-    $time = time();
-    include __DIR__ . '/index.html.php';
+    $root = HTTP['root'];
+    $build = OPTIONS['build'];
+    include __DIR__ . '/template.php';
   }],
 ], function () {
   // error

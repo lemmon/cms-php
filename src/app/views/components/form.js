@@ -37,13 +37,14 @@ module.exports = class Form extends Component {
 
   field(_props) {
     const {
-      fields,
       data,
+      fields,
     } = this.state
     if (!fields[_props.name]) {
       const props = Object.assign({}, _props, {
         onupdate: props => Object.assign(props, {
           value: data[props.name],
+          disabled: this.state.loading,
         }),
         onchange: c => {
           data[props.name] = c.value

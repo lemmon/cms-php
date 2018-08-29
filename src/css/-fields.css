@@ -38,14 +38,6 @@
   outline: 0 !important;
 }
 
-.field-border {
-  box-shadow: inset 0 0 0 1px var(--black-10);
-  transition: box-shadow .1s;
-  &:hover {
-    box-shadow: inset 0 0 0 1px var(--black-20);
-  }
-}
-
 .field-textarea {
   & .field-input {
     resize: none;
@@ -72,6 +64,15 @@
   box-shadow: inset 0 -1px var(--black-10);
 }
 
+.field-border {
+  box-shadow: inset 0 0 0 1px var(--black-10);
+  transition: box-shadow .1s;
+}
+
+.field-border:hover:not(:disabled) {
+  box-shadow: inset 0 0 0 1px var(--black-20);
+}
+
 .field-focus:not(:disabled),
 .field-border:focus:not(:disabled) {
   box-shadow: inset 0 0 0 1px var(--blue),
@@ -90,4 +91,16 @@
     box-shadow: inset 0 0 0 1px var(--red),
       0 0 0 1px var(--red);
   }
+}
+
+.field-disabled,
+.field :disabled {
+  cursor: not-allowed;
+  color: var(--black-50);
+}
+
+.field-placeholder,
+.field ::placeholder {
+    color: var(--black-20);
+    opacity: 1;
 }

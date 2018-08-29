@@ -35,6 +35,7 @@ module.exports = class Field extends Component {
           <textarea
             name=${this.name}
             class="field-input field-border p1 lh4 bg-white"
+            disabled=${!!props.disabled}
             oninput=${e => this.handleInput(e, props)}
             onfocus=${e => this.handleFocus(e, props)}
             onblur=${e => this.handleBlur(e, props)}

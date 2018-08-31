@@ -6,7 +6,7 @@ rm -rf dist/*
 
 mkdir -pv dist
 
-browserify src/app -t [ babelify --presets [ @babel/preset-env ] ] | uglifyjs > dist/~garner.js
+browserify src/app -t babelify > dist/~garner.js
 abrusco src/css -o dist/~garner.css --minify
 
 ln -snv ../config/garner.config.php dist

@@ -2,7 +2,6 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
-    "babel-preset-minify": "^0.4.3",
     "babelify": "^9.0.0",
     "nanocomponent": "^6.5.2",
     "nanohtml": "^1.2.4",
@@ -15,7 +14,17 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-env"
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "edge": "14",
+            "firefox": "45",
+            "chrome": "47",
+            "safari": "10.1"
+          }
+        }
+      ]
     ]
   },
   "eslintConfig": {

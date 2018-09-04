@@ -63,6 +63,10 @@ function parse_collections($collections) {
       throw new \Exception('schema: invalid collection property: name');
     }
     $props['name'] = $name;
+    // caption
+    if (empty($props['caption'])) {
+      $props['caption'] = humanize($name);
+    }
     // fields
     $props['fields'] = parse_fields($props['fields'], $name);
     // assign

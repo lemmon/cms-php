@@ -52,7 +52,7 @@
   & .field-input,
   & .field-preview {
     white-space: pre-wrap;
-    word-break: break-all;
+    overflow-wrap: break-word;
   }
 }
 

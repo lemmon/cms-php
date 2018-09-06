@@ -11,10 +11,10 @@
   </script>
   <script src="<?= $root ?>/garner.<?= $build ?>.js" defer></script>
 </head>
-<body class="col justify-center items-center">
+<body class="col">
 
-  <div class="p2">
-    Loading&hellip;
+  <div id="app" class="span1 col justify-center items-center">
+    <div class="p2">Loading&hellip;</div>
   </div>
 
 </body>

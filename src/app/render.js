@@ -6,7 +6,10 @@ const Container = require('./lib/components-container')
 
 // render emitter
 function render() {
-  morph(document.body, state.page())
+  morph(
+    state.app,
+    state.page(),
+  )
 }
 
 // components

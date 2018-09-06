@@ -38,7 +38,7 @@ const renderSection = ({ schema, collection, section }) => [
 ]
 
 module.exports = () => html`
-  <body class="row p1">
+  <div class="span1 row p1">
     ${router([
       [MATCH_HOME, () => renderDashboard({
         schema: state.schema,
@@ -49,7 +49,7 @@ module.exports = () => html`
         section,
       }) || views.notfound()],
     ])}
-  </body>
+  </div>
 `
 
 function findcollection(section) {

@@ -2,7 +2,10 @@ const html = require('nanohtml')
 const Component = require('nanocomponent')
 const api = require('../../api')
 
-const Input = require('./textarea')
+const Fields = {
+  text: require('./field-text'),
+  slug: require('./field-slug'),
+}
 
 const loader = require('../partials/loader')
 const button = require('../partials/button')
@@ -56,13 +59,10 @@ module.exports = class Form extends Component {
           }
         }
       })
-      fields[_props.name] = {
-        props,
-        component: new Input(props),
-      }
+      fields[_props.name] = new Fields[props.type](props)
     }
     const field = fields[_props.name]
-    return field.component.render(field.props)
+    return field.render(field.props)
   }
 
   createElement(props) {
@@ -142,14 +142,14 @@ module.exports = class Form extends Component {
 
   data() {
     return this.state.collection.fields.reduce((data, field) => Object.assign(data, {
-      [field.name]: this.state.fields[field.name].component.value || null,
+      [field.name]: this.state.fields[field.name].value || null,
     }), {})
   }
 
   validate() {
-    return Promise.all(this.fields().map(({ component, props }) => (
+    return Promise.all(this.fields().map(field => (
       // validate fields
-      component.validate(props)
+      field.validate()
     ))).then(fields => fields.reduce((data, field) => Object.assign(data, {
       // map fields to `name`: `value` object
       [field.name]: field.value || null,

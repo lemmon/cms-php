@@ -70,7 +70,7 @@ module.exports = class Field extends Component {
     this.value = e.target.value
     if (this.state.errors) {
       this.state.errors = null
-      this.element.classList.remove('field-error')
+      this.element.classList.remove('field-invalid')
     }
     if (this.props.onchange) {
       this.props.onchange(this)

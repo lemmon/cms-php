@@ -79,11 +79,12 @@
     0 0 0 1px var(--blue);
 }
 
-.field-error {
+.field-invalid {
   & .field-note {
     color: var(--red);
   }
-  & .field-border {
+  & .field-border,
+  & .field-border:hover {
     box-shadow: inset 0 0 0 1px var(--red);
   }
   & .field-focus:not(:disabled),

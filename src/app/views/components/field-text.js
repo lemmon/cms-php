@@ -5,7 +5,7 @@ module.exports = class TextField extends Field {
 
   createElement() {
     return html`
-      <label class="field ${this.state.touched && this.state.errors && `field-error` || ``}">
+      <label class="field ${this.state.touched && this.state.errors && `field-invalid` || ``}">
         <div
           class="field-label f4 fw500 color-black-40 bg-white"
         >${this.props.label}</div>

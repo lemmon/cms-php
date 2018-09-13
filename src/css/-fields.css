@@ -73,8 +73,7 @@
   box-shadow: inset 0 0 0 1px var(--black-20);
 }
 
-.field-focus:not(:disabled),
-.field-border:focus:not(:disabled) {
+.field-border.field-focus:not(:disabled) {
   box-shadow: inset 0 0 0 1px var(--blue),
     0 0 0 1px var(--blue);
 }
@@ -83,12 +82,11 @@
   & .field-note {
     color: var(--red);
   }
-  & .field-border,
-  & .field-border:hover {
+  &.field-border,
+  &.field-border:hover:not(:disabled) {
     box-shadow: inset 0 0 0 1px var(--red);
   }
-  & .field-focus:not(:disabled),
-  & .field-border:focus:not(:disabled) {
+  &.field-border.field-focus:not(:disabled) {
     box-shadow: inset 0 0 0 1px var(--red),
       0 0 0 1px var(--red);
   }

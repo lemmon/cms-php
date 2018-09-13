@@ -8,19 +8,46 @@ module.exports = class Field extends Component {
     this.name = props.name
     this.value = props.value
     this.state = {
-      initialValue: props.value,
+      inputValue: null,
       touched: false,
+      focus: false,
       validating: false,
       errors: null,
     }
     this.update(props)
   }
 
+  createElement(field, opt = {}) {
+    return html`
+      <label
+        class="field field-border ${
+          this.state.focus && `field-focus` || ``
+        } bg-white ${
+          opt.max && `max${opt.max}` || ``
+        } ${
+          this.state.touched && this.state.errors && `field-invalid` || ``
+        }"
+      >
+        <div
+          class="field-label f4 fw500 color-black-40 bg-white"
+        >${this.props.label}</div>
+        ${this.state.errors && html`
+          <div
+            class="field-note f4 fw500 color-black-40 bg-white"
+          >${this.state.errors[0]}</div>
+        ` || this.props.required && html`
+          <div class="field-note f4 fw500 color-black-40 bg-white">required</div>
+        ` || ``}
+        ${field}
+      </label>
+    `
+  }
+
   update(props) {
     if (props.onupdate) {
       props = props.onupdate(props)
     }
-    if (props.value !== undefined && props.value !== this.value) {
+    if (props.value !== undefined && this.value !== props.value) {
       this.value = props.value
     }
     this.props = props
@@ -28,22 +55,23 @@ module.exports = class Field extends Component {
   }
 
   sanitize(sanitize) {
-    if (sanitize && this.state.initialValue !== this.value) {
-      // custom sanitize
-      sanitize()
+    if (this.state.inputValue !== null) {
+      // sanitize
+      this.value = sanitize
+        ? sanitize(this.state.inputValue)
+        : this.state.inputValue
+      // input value
+      this.state.inputValue = null
       // onchange event
       if (this.props.onchange) {
         this.props.onchange(this)
       }
     }
-    // initial value
-    this.state.initialValue = this.value
   }
 
-  validate() {
+  validate(validate) {
     this.state.touched = true
-    this.state.validating = true
-    return new Promise((resolve, reject) => {
+    return this.state.validating = new Promise((resolve, reject) => {
       const errors = []
       // sanitize
       this.sanitize()
@@ -61,34 +89,48 @@ module.exports = class Field extends Component {
         this.state.errors = errors
         reject(errors)
       }
+    }).then(() => (
+      validate && validate(this)
+    )).catch(err => {
+      if (!this.state.errors) {
+        this.state.errors = []
+      }
+      this.state.errors.push(err.message)
+    }).finally(() => {
       this.state.validating = false
-      this.render(this.props)
-    })
+    }).then(() => (
+      this
+    ))
   }
 
   handleInput(e) {
-    this.value = e.target.value
+    // input
+    this.state.inputValue = e.target.value
+    // errors
     if (this.state.errors) {
       this.state.errors = null
       this.element.classList.remove('field-invalid')
     }
-    if (this.props.onchange) {
-      this.props.onchange(this)
-    }
   }
 
   handleFocus(e) {
-    if (this.props.onfocus) {
-      this.props.onfocus(this)
+    if (this.state.focus) {
+      clearTimeout(this.state.focus)
+    } else {
+      this.element.classList.add('field-focus')
     }
   }
 
   handleBlur(e) {
-    this.state.touched = true
-    this.sanitize()
-    if (this.props.onblur) {
-      this.props.onblur(this)
-    }
-    this.validate().catch( err => {} ) // TODO: report error
+    this.state.focus = setTimeout(() => {
+      this.state.focus = false
+      this.validate().then(() => {
+        this.render(this.props)
+        if (this.props.onchange) {
+          this.props.onchange(this)
+        }
+      })
+      this.element.classList.remove('field-focus')
+    })
   }
 }

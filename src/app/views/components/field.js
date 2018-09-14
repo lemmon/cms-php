@@ -103,6 +103,10 @@ module.exports = class Field extends Component {
     ))
   }
 
+  isValid() {
+    return !this.state.errors
+  }
+
   handleInput(e) {
     // input
     this.state.inputValue = e.target.value

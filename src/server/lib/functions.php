@@ -10,7 +10,7 @@ function array_filter_recursive(array $arr): array
     }
     if ($value) {
       $arr[$i] = $value;
-    } else {
+    } elseif ($value === NULL or $value === []) {
       unset($arr[$i]);
     }
   }

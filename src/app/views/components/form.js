@@ -148,11 +148,16 @@ module.exports = class Form extends Component {
 
   validate() {
     return Promise.all(this.fields().map(field => (
-      // validate fields
-      field.validate()
+      // validate field
+      field.validate().then(() => {
+        if (!field.isValid()) {
+          throw Error('field is invalid')
+        }
+        return field
+      })
     ))).then(fields => fields.reduce((data, field) => Object.assign(data, {
       // map fields to `name`: `value` object
-      [field.name]: field.value || null,
+      [field.name]: field.value,
     }), {}))
   }
 

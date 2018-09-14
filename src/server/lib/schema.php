@@ -6,9 +6,10 @@ use function app\{config, dump};
 
 define('DEFAULT_FIELD_TYPE', 'text');
 define('VALID_FIELD_TYPES', [
-  'text',
   'email',
+  'number',
   'slug',
+  'text',
 ]);
 define('RESERVED_COLLECTION_NAMES', [
   'cache',

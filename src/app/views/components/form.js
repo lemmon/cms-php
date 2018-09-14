@@ -3,8 +3,9 @@ const Component = require('nanocomponent')
 const api = require('../../api')
 
 const Fields = {
-  text: require('./field-text'),
+  number: require('./field-number'),
   slug: require('./field-slug'),
+  text: require('./field-text'),
 }
 
 const loader = require('../partials/loader')

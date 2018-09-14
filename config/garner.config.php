@@ -19,6 +19,9 @@ return [
             'minlength' => 2,
             'maxlength' => 48,
           ],
+          'order' => [
+            'type' => 'number',
+          ],
           'text' => [ 'multiline' => TRUE ],
         ],
       ],

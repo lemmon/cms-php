@@ -61,7 +61,9 @@ module.exports = class NumberField extends Field {
     setTimeout(() => {
       if (this.state.focus) {
         this.validate().then(() => {
-          this.element.classList.toggle('field-invalid', this.errors)
+          if (!this.isValid()) {
+            this.element.classList.toggle('field-invalid', this.errors)
+          }
         })
       }
     })

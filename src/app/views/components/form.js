@@ -102,7 +102,7 @@ module.exports = class Form extends Component {
                   ${button({
                     type: 'submit',
                     caption: 'Delete',
-                    style: 'clear',
+                    style: 'transparent',
                     color: 'red',
                     disabled: loading,
                     loading: loading && currentAction === 'delete',

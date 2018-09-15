@@ -71,7 +71,8 @@ module.exports = class Field extends Component {
 
   validate(validate) {
     this.state.touched = true
-    return this.state.validating = new Promise((resolve, reject) => {
+    this.state.validating = true
+    return new Promise((resolve, reject) => {
       const errors = []
       // sanitize
       this.sanitize()

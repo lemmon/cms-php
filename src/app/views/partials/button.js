@@ -3,7 +3,7 @@ const html = require('nanohtml')
 module.exports = (props) => html`
   <button
     class="
-      button button-over
+      button button-overlay button-border
       ${props.style && `button-${props.style}` || ``}
       bg-${props.color || `blue`}
       color-${props.style ? props.color || `blue` : `white`}

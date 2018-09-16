@@ -131,9 +131,6 @@ module.exports = class Field extends Component {
       this.state.focus = false
       this.validate().then(() => {
         this.render(this.props)
-        if (this.props.onchange) {
-          this.props.onchange(this)
-        }
       })
       this.element.classList.remove('field-focus')
     })

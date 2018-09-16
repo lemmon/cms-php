@@ -21,22 +21,20 @@ module.exports = class Form extends Component {
 
   constructor(props) {
     super()
-    const { id } = props
     this.state = {
-      collection: props.collection,
       defaultAction: props.action,
       currentAction: null,
-      id: id,
-      data: !id && {} || null,
+      data: !props.id && {} || null,
       fields: {},
       loading: false,
     }
-    if (id) {
-      api.get(`/${this.state.collection.name}/${id}.json`).then(res => {
+    if (props.id) {
+      api.get(`/${props.collection.name}/${props.id}.json`).then(res => {
         this.state.data = res.data || false
         this.render(props)
       })
     }
+    this.update(props)
   }
 
   field(_props) {
@@ -45,31 +43,33 @@ module.exports = class Form extends Component {
       fields,
     } = this.state
     if (!fields[_props.name]) {
-      const props = Object.assign({}, _props, {
+      fields[_props.name] = new Fields[_props.type](Object.assign({}, _props, {
         onupdate: props => Object.assign(props, {
           value: data[props.name],
           disabled: this.state.loading,
         }),
-        onchange: c => {
-          data[props.name] = c.value
+        onchange: field => {
+          data[field.name] = field.value
         },
         onkeypress: e => {
           if (e.keyCode === 13 && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
             e.preventDefault()
-            this.handleSubmit(e, props)
+            this.handleSubmit(e)
           }
         }
-      })
-      fields[_props.name] = new Fields[props.type](props)
+      }))
     }
     const field = fields[_props.name]
     return field.render(field.props)
   }
 
-  createElement(props) {
-    const { action, id, onsubmit } = props
+  createElement() {
     const {
       collection,
+      action,
+      id,
+    } = this.props
+    const {
       data,
       loading,
       currentAction,
@@ -79,7 +79,7 @@ module.exports = class Form extends Component {
         <form
           method="post"
           novalidate="true"
-          onsubmit=${e => this.handleSubmit(e, props)}
+          onsubmit=${e => this.handleSubmit(e)}
         >
           <div class="p05">
             ${collection.fields.map(field => html`
@@ -132,17 +132,18 @@ module.exports = class Form extends Component {
   }
 
   update(props, force) {
+    this.props = props
     return !this.state.loading || force
   }
 
   fields() {
-    return this.state.collection.fields.map(field => (
+    return this.props.collection.fields.map(field => (
       this.state.fields[field.name]
     ))
   }
 
   data() {
-    return this.state.collection.fields.reduce((data, field) => Object.assign(data, {
+    return this.props.collection.fields.reduce((data, field) => Object.assign(data, {
       [field.name]: this.state.fields[field.name].value || null,
     }), {})
   }
@@ -162,15 +163,12 @@ module.exports = class Form extends Component {
     }), {}))
   }
 
-  handleSubmit(e, props) {
+  handleSubmit(e) {
     e.preventDefault()
-    const {
-      collection,
-      currentAction,
-      defaultAction,
-    } = this.state
+    const { collection } = this.props
+    const { currentAction, defaultAction } = this.state
     this.state.loading = true
-    this.render(props, true)
+    this.render(this.props, true)
     const action = actions[currentAction || defaultAction]
     this[action]().then(() => {
       // redir to listing
@@ -179,13 +177,13 @@ module.exports = class Form extends Component {
       // error
       this.state.loading = false
       this.state.currentAction = null
-      this.render(props)
+      this.render(this.props)
     })
   }
 
   handleCreate() {
     return this.validate().then(data => (
-      api.post(`/${this.state.collection.name}`, {
+      api.post(`/${this.props.collection.name}`, {
         data,
       })
     ))
@@ -193,7 +191,7 @@ module.exports = class Form extends Component {
 
   handleUpdate() {
     return this.validate().then(data => (
-      api.post(`/${this.state.collection.name}/${this.state.id}`, {
+      api.post(`/${this.props.collection.name}/${this.props.id}`, {
         data: Object.assign({}, data, {
           id: undefined,
           created: undefined,
@@ -204,6 +202,6 @@ module.exports = class Form extends Component {
   }
 
   handleDelete(data) {
-    return api.delete(`/${this.state.collection.name}/${this.state.id}`)
+    return api.delete(`/${this.props.collection.name}/${this.props.id}`)
   }
 }

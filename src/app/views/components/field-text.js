@@ -17,9 +17,6 @@ module.exports = class TextField extends Field {
             if (e.keyCode === 13 && !this.props.multiline) {
               e.preventDefault()
             }
-            if (this.props.onkeypress) {
-              this.props.onkeypress(e)
-            }
           }}
         >${this.state.inputValue || this.value || ''}</textarea>
         <div class="p1 lh4 row" style="color: transparent;">

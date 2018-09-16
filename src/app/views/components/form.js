@@ -51,12 +51,6 @@ module.exports = class Form extends Component {
         onchange: field => {
           data[field.name] = field.value
         },
-        onkeypress: e => {
-          if (e.keyCode === 13 && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
-            e.preventDefault()
-            this.handleSubmit(e)
-          }
-        }
       }))
     }
     const field = fields[_props.name]

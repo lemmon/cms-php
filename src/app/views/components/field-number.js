@@ -21,6 +21,12 @@ module.exports = class NumberField extends Field {
           oninput=${e => this.handleInput(e)}
           onfocus=${e => this.handleFocus(e)}
           onblur=${e => this.handleBlurInput(e)}
+          onkeydown=${e => {
+            switch (e.keyCode) {
+              case 38: e.preventDefault(); this.increase(1, 1); break
+              case 40: e.preventDefault(); this.increase(-1, 0); break
+            }
+          }}
         /></div>
         <div class="div color-black-10 py05"></div>
         <div class="p025 ac" style="width: 2rem;">

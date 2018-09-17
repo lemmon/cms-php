@@ -45,20 +45,19 @@ module.exports = class TextField extends Field {
     this.updateValue()
   }
 
-  sanitize() {
+  sanitize(sanitize) {
     super.sanitize(input => {
       // trim
       input = input.trim()
       // multiline
-      if (this.props.multiline) {
-        input = input
+      input = this.props.multiline
+        ? input
           .replace(/ +$/mg, '')
           .replace(/\n{3,}/g, '\n\n')
-      } else {
-        input = input.replace(/\s+/g, ' ')
-      }
-      //
-      return input || null
+        : input
+          .replace(/\s+/g, ' ')
+      // res
+      return sanitize ? sanitize(input) : input || null
     })
   }
 

@@ -1,8 +1,8 @@
 {
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "babelify": "^9.0.0",
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "babelify": "^10.0.0",
     "nanocomponent": "^6.5.2",
     "nanohtml": "^1.2.4",
     "nanomorph": "^5.1.3"
@@ -10,7 +10,10 @@
   "scripts": {
     "w:css": "abrusco src/css -o develop/garner.css --watch",
     "w:app": "watchify src/app -o develop/garner.js --verbose",
-    "w": "npm run w:css & npm run w:app"
+    "w": "npm run w:css & npm run w:app",
+    "build:css": "abrusco src/css -o dist/garner.css --minify",
+    "build:app": "browserify src/app -t nanohtml -t babelify -o dist/garner.js",
+    "build": "npm run build:css && npm run build:app"
   },
   "babel": {
     "presets": [

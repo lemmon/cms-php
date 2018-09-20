@@ -6,15 +6,14 @@ rm -rf dist/*
 
 mkdir -pv dist
 
-browserify src/app -t nanohtml -t babelify > dist/~garner.js
-abrusco src/css -o dist/~garner.css --minify
+npm run build
 
 ln -snv ../config/garner.config.php dist
 
 box build -v
-box add -v dist/garner.phar dist/~garner.js garner.js
-box add -v dist/garner.phar dist/~garner.css garner.css
+box add -v dist/garner.phar dist/garner.js garner.js
+box add -v dist/garner.phar dist/garner.css garner.css
 mv dist/garner.phar dist/garner.php
 
-#rm -v dist/~garner.js
-#rm -v dist/~garner.css
+#rm -v dist/garner.js
+#rm -v dist/garner.css
